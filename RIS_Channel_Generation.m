@@ -51,19 +51,18 @@ parfor ss=1:sample
 end
 
 %% Casecaded Complex Channel Generation at Willie (random phase-shift) + Bob (optimal phase-shift)
-OnOff = 0 ; % OnOff = 0/1 - A factor for link from source to Willie/Bob
+OnOff = 0; % OnOff = 0/1 - A factor for link from source to Willie/Bob
 for ss=1:sample
     %% Rayleigh
-     % Phase-shift + casecaded channel generation at Willie 
+     % Phase-shift + cascaded channel generation at Willie 
         phase_shift_at_k =  exp(-1i*2*pi*rand(1,L));  
         phase_shift_matrix_RIS_W = diag(phase_shift_at_k);
         ch_h_Ray_SW(ss)     =  OnOff*h_Ray_SW(ss) + h_Ray_SR(ss,:)*phase_shift_matrix_RIS_W*h_Ray_RW(:,ss);
        
-        % Phase-shift + casecaded channel generation at Bob
+        % Phase-shift + cascaded channel generation at Bob
         for ll=1:L
-            phase_shift_config_ideal =  angle(h_Ray_SB(ss)) - angle(h_Ray_SR(ss,ll))   - angle(h_Ray_RB(ss,ll));
-            phase_shift_normalized_ideal = wrapTo2Pi(phase_shift_config_ideal);
-            phase_shift_complex_vector_Ray(ll) = exp(1i*phase_shift_normalized_ideal);
+            phase_shift_config =  angle(h_Ray_SB(ss)) - angle(h_Ray_SR(ss,ll))   - angle(h_Ray_RB(ss,ll));
+            phase_shift_complex_vector_Ray(ll) = exp(1i*phase_shift_config);
         end
         phase_shift_matrix_RIS_Ray = diag(phase_shift_complex_vector_Ray(1:L));
  
@@ -74,25 +73,23 @@ for ss=1:sample
 
         ch_h_Naka_SW(ss)   =  OnOff*h_Naka_SW(ss) + h_Naka_SR(ss,:)*phase_shift_matrix_RIS_W*h_Naka_RW(:,ss);
         
-        % Phase-shift + casecaded channel generation at Bob
+        % Phase-shift + cascaded channel generation at Bob
         for ll=1:L
-            phase_shift_config_ideal =  angle(h_Naka_SB(ss)) - angle(h_Naka_SR(ss,ll))   -angle(h_Naka_RB(ss,ll));
-            phase_shift_normalized_ideal = wrapTo2Pi(phase_shift_config_ideal);
-            phase_shift_complex_vector_Naka(ll) = exp(1i*phase_shift_normalized_ideal);
+            phase_shift_config =  angle(h_Naka_SB(ss)) - angle(h_Naka_SR(ss,ll))   -angle(h_Naka_RB(ss,ll));
+            phase_shift_complex_vector_Naka(ll) = exp(1i*phase_shift_config);
         end
         phase_shift_matrix_RIS_Naka = diag(phase_shift_complex_vector_Naka(1:L));
  
         ch_h_Naka_SB(ss) =  OnOff*h_Naka_SB(ss) + h_Naka_SR(ss,:)*phase_shift_matrix_RIS_Naka*h_Naka_RB(ss,:).';
 
     %% Rician
-    % Phase-shift + casecaded channel generation at Willie
+    % Phase-shift + cascaded channel generation at Willie
     ch_h_Rician_SW(ss) =  OnOff*h_Rician_SW(ss) + h_Rician_SR(ss,:)*phase_shift_matrix_RIS_W*h_Rician_RW(:,ss);
 
-    % Phase-shift + casecaded channel generation at Bob
+    % Phase-shift + cascaded channel generation at Bob
         for ll=1:L
-            phase_shift_config_ideal =  angle(h_Rician_SB(ss)) - angle(h_Rician_SR(ss,ll))   -angle(h_Rician_RB(ss,ll));
-            phase_shift_normalized_ideal = wrapTo2Pi(phase_shift_config_ideal);
-            phase_shift_complex_vector(ll) = exp(1i*phase_shift_normalized_ideal);
+            phase_shift_config =  angle(h_Rician_SB(ss)) - angle(h_Rician_SR(ss,ll))   -angle(h_Rician_RB(ss,ll));
+            phase_shift_complex_vector(ll) = exp(1i*phase_shift_config);
         end
         phase_shift_matrix_RIS = diag(phase_shift_complex_vector(1:L));
         ch_h_Rician_SB(ss) =  OnOff*h_Rician_SB(ss) + h_Rician_SR(ss,:)*phase_shift_matrix_RIS*h_Rician_RB(ss,:).';
