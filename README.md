@@ -1,1 +1,5 @@
-# RIS_Channel_Generation
+# A Generation Approach for RIS communication
+
+# RayLeigh Distribution
+# Nakagami-m Distribution
+# Rician Distribution
