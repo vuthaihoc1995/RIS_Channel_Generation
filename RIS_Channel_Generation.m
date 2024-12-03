@@ -173,6 +173,8 @@ lgd.NumColumns = 1;
 lgd.FontSize = 14;
 set(gca,'fontsize',14);
 title('Rayleigh Fading')
+xlabel('Transmit SNR');
+ylabel('Outage Probability (OP)');
 axis([-Inf Inf 1e-4 10^(0)]);
 % Naka
 figure(2)
@@ -192,6 +194,8 @@ lgd.NumColumns = 1;
 lgd.FontSize = 14;
 set(gca,'fontsize',14);
 title('Nakagami-m Fading')
+xlabel('Transmit SNR');
+ylabel('Outage Probability (OP)');
 axis([-Inf Inf 1e-4 10^(0)]);
 % Rician
 figure(3)
@@ -211,6 +215,8 @@ lgd.NumColumns = 1;
 lgd.FontSize = 14;
 set(gca,'fontsize',14);
 title('Rician Fading')
+xlabel('Transmit SNR');
+ylabel('Outage Probability (OP)');
 axis([-Inf Inf 1e-4 10^(0)]);
 
 
