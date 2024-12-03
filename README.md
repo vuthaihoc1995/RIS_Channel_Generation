@@ -1,5 +1,5 @@
 # A Generation Approach for RIS communication
 
-# RayLeigh Distribution
-# Nakagami-m Distribution
-# Rician Distribution
+1. RayLeigh Distribution
+2. Nakagami-m Distribution
+3. Rician Distribution
