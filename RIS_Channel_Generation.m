@@ -130,7 +130,7 @@ alpha_Naka_B = ( OnOff*mu_h_Naka(1,m_SB,L_SB)   + L*mu_h_Naka(1,m_SR,L_SR)*mu_h_
     ( OnOff*(mu_h_Naka(2,m_SB,L_SB) -  mu_h_Naka(1,m_SB,L_SB)^2)   + L*(mu_h_Naka(2,m_SR,L_SR)*mu_h_Naka(2,m_RB,L_RB)  - mu_h_Naka(1,m_SR,L_SR)^2*mu_h_Naka(1,m_RB,L_RB)^2 )  );
 beta_Naka_B   = ( OnOff*mu_h_Naka(1,m_SB,L_SB)   + L*mu_h_Naka(1,m_SR,L_SR)*mu_h_Naka(1,m_RB,L_RB) )/...
     ( OnOff*(mu_h_Naka(2,m_SB,L_SB) -  mu_h_Naka(1,m_SB,L_SB)^2)   + L*(mu_h_Naka(2,m_SR,L_SR)*mu_h_Naka(2,m_RB,L_RB)  - mu_h_Naka(1,m_SR,L_SR)^2*mu_h_Naka(1,m_RB,L_RB)^2 )  );
-OP_ana_Naka_B(idx) = 1 - igamma(alpha_Naka_B,beta_Naka_B*sqrt(2^3/snr) )/gamma(alpha_Naka_B);
+OP_ana_Naka_B(idx) = 1 - igamma(alpha_Naka_B,beta_Naka_B*sqrt(gamma_th/snr) )/gamma(alpha_Naka_B);
 
 % Rician
 OP_sim_Rician_B(idx) = mean( abs(ch_h_Rician_SB).^2*snr < gamma_th);
