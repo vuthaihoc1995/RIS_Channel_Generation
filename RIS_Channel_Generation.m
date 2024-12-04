@@ -23,30 +23,35 @@ parfor ss=1:sample
        
         % Rayleigh enviroment
          h_Ray_SR(ss,:)  = sqrt(L_SR)*sqrt(1/2)*(randn(L,1) + 1i*randn(L,1)); 
-         h_Ray_RW(:,ss) = sqrt(L_RW)*sqrt(1/2)*(randn(1,L) + 1i*randn(1,L)); 
+         h_Ray_RW(ss,:) = sqrt(L_RW)*sqrt(1/2)*(randn(L,1) + 1i*randn(L,1)); 
          h_Ray_SW(ss)   = sqrt(L_SW)*sqrt(1/2)*(randn(1,1) + 1i*randn(1,1)); 
-         h_Ray_RB(ss,:)  = sqrt(L_RB)*sqrt(1/2)*(randn(1,L) + 1i*randn(1,L)); 
+         h_Ray_RB(ss,:)  = sqrt(L_RB)*sqrt(1/2)*(randn(L,1) + 1i*randn(L,1)); 
          h_Ray_SB(ss)    = sqrt(L_SB)*sqrt(1/2)*(randn(1,1) + 1i*randn(1,1)); 
 
         % Nakagami-m enviroment
         h_Naka_SR(ss,:)  = sqrt(L_SR).* sqrt(gamrnd(m_SR,1/m_SR,L,1)).* exp(1i*2*pi*rand(L,1));
-        h_Naka_RW(:,ss) = sqrt(L_RW).*sqrt(gamrnd(m_RW,1/m_RW,1,L)).* exp(1i*2*pi*rand(1,L));
+        h_Naka_RW(ss,:)= sqrt(L_RW).*sqrt(gamrnd(m_RW,1/m_RW,L,1)).* exp(1i*2*pi*rand(L,1));
         h_Naka_SW(ss)   = sqrt(L_SW).*sqrt(gamrnd(m_SW,1/m_SW,1,1)).* exp(1i*2*pi*rand(1,1));
-        h_Naka_RB(ss,:)  = sqrt(L_RB).*sqrt(gamrnd(m_RB,1/m_RB,1,L)).* exp(1i*2*pi*rand(1,L));
+        h_Naka_RB(ss,:)  = sqrt(L_RB).*sqrt(gamrnd(m_RB,1/m_RB,L,1)).* exp(1i*2*pi*rand(L,1));
         h_Naka_SB(ss)    = sqrt(L_SB).* sqrt(gamrnd(m_SB,1/m_SB,1,1)).* exp(1i*2*pi*rand(1,1));
    
 
         % % % Rician enviroment
-        mean_SR =  sqrt(k_SR/(k_SR+1)); varSR =  sqrt(1/(k_SR+1));
-        h_Rician_SR(ss,:)   = sqrt(L_SR)*sqrt(1/2).*(  mean_SR  + varSR*randn(L,1)  + 1i*(mean_SR  + varSR*randn(L,1)) );
-        mean_RW =  sqrt(k_RW/(k_RW+1)); varRW =  sqrt(1/(k_RW+1));
-        h_Rician_RW(:,ss)  = sqrt(L_RW)*sqrt(1/2).*( mean_RW + varRW*randn(1,L) + 1i*(mean_RW + varRW*randn(1,L)));
-        mean_SW =  sqrt(k_SW/(k_SW+1)); varSW =  sqrt(1/(k_SW+1));
-        h_Rician_SW(ss)    = sqrt(L_SW)*sqrt(1/2).*( mean_SW  + varSW*randn(1,1) + 1i*(mean_SW + varSW*randn(1,1)));
-        mean_RB =  sqrt(k_RB/(k_RB+1)); varRB =  sqrt(1/(k_RB+1));
-        h_Rician_RB(ss,:)   = sqrt(L_RB)*sqrt(1/2).*( mean_RB   + varRB*randn(1,L)  + 1i*(mean_RB  + varRB*randn(1,L)));
-        mean_SB =  sqrt(k_SB/(k_SB+1)); varSB =  sqrt(1/(k_SB+1));
-        h_Rician_SB(ss)     = sqrt(L_SB)*sqrt(1/2).*( mean_SB   + varSB*randn(1,1)  + 1i*(mean_SB   + varSB*randn(1,1)));
+         mean_SR =  sqrt(k_SR/(k_SR+1)); varSR =  sqrt(1/(k_SR+1))*sqrt(1/2);
+        h_Rician_SR(ss,:)   = sqrt(L_SR).*random('Rician',mean_SR,varSR,L,1).* exp(1i*2*pi*rand(L,1));
+
+        mean_RW =  sqrt(k_RW/(k_RW+1)); varRW =  sqrt(1/(k_RW+1))*sqrt(1/2);
+        h_Rician_RW(ss,:)  = sqrt(L_RW).*random('Rician',mean_RW,varRW,L,1).* exp(1i*2*pi*rand(L,1));
+
+        mean_SW =  sqrt(k_SW/(k_SW+1)); varSW =  sqrt(1/(k_SW+1))*sqrt(1/2);
+        h_Rician_SW(ss)    = sqrt(L_SW).*random('Rician',mean_SW,varSW,1,1).* exp(1i*2*pi*rand(1,1));
+
+        mean_RB =  sqrt(k_RB/(k_RB+1)); varRB =  sqrt(1/(k_RB+1))*sqrt(1/2);
+        h_Rician_RB(ss,:)   = sqrt(L_RB).*random('Rician',mean_RB,varRB,L,1).* exp(1i*2*pi*rand(L,1));
+
+        mean_SB =  sqrt(k_SB/(k_SB+1)); varSB =  sqrt(1/(k_SB+1))*sqrt(1/2);
+        h_Rician_SB(ss)     = sqrt(L_SB).*random('Rician',mean_SB,varSB,1,1).* exp(1i*2*pi*rand(1,1));
+
 
 end
 
@@ -54,33 +59,28 @@ end
 OnOff = 0; % OnOff = 0/1 - A factor for link from source to Willie/Bob
 for ss=1:sample
     %% Rayleigh
-     % Phase-shift + cascaded channel generation at Willie 
-        phase_shift_at_k =  exp(-1i*2*pi*rand(1,L));  
-        phase_shift_matrix_RIS_W = diag(phase_shift_at_k);
-        ch_h_Ray_SW(ss)     =  OnOff*h_Ray_SW(ss) + h_Ray_SR(ss,:)*phase_shift_matrix_RIS_W*h_Ray_RW(:,ss);
-       
-        % Phase-shift + cascaded channel generation at Bob
+     % Phase-shift + cascaded channel generation at Bob
         for ll=1:L
-            phase_shift_config =  angle(h_Ray_SB(ss)) - angle(h_Ray_SR(ss,ll))   - angle(h_Ray_RB(ss,ll));
-            phase_shift_complex_vector_Ray(ll) = exp(1i*phase_shift_config);
+            phase_shift_config_Ray =  angle(h_Ray_SB(ss)) - angle(h_Ray_SR(ss,ll))   - angle(h_Ray_RB(ss,ll)).';
+            phase_shift_complex_vector_Ray(ll) = exp(1i*phase_shift_config_Ray);
         end
         phase_shift_matrix_RIS_Ray = diag(phase_shift_complex_vector_Ray(1:L));
  
         ch_h_Ray_SB(ss) =  OnOff*h_Ray_SB(ss) + h_Ray_SR(ss,:)*phase_shift_matrix_RIS_Ray*h_Ray_RB(ss,:).';
+       % cascaded channel generation at Willie 
+        ch_h_Ray_SW(ss)     =  OnOff*h_Ray_SW(ss) + h_Ray_SR(ss,:)*phase_shift_matrix_RIS_Ray*h_Ray_RW(ss,:).';
 
         %% Nakagami-m
-        % Phase-shift + casecaded channel generation at Willie
-
-        ch_h_Naka_SW(ss)   =  OnOff*h_Naka_SW(ss) + h_Naka_SR(ss,:)*phase_shift_matrix_RIS_W*h_Naka_RW(:,ss);
-        
         % Phase-shift + cascaded channel generation at Bob
         for ll=1:L
-            phase_shift_config =  angle(h_Naka_SB(ss)) - angle(h_Naka_SR(ss,ll))   -angle(h_Naka_RB(ss,ll));
-            phase_shift_complex_vector_Naka(ll) = exp(1i*phase_shift_config);
+            phase_shift_config_Naka =  angle(h_Naka_SB(ss)) - angle(h_Naka_SR(ss,ll))   -angle(h_Naka_RB(ss,ll)).';
+            phase_shift_complex_vector_Naka(ll) = exp(1i*phase_shift_config_Naka);
         end
         phase_shift_matrix_RIS_Naka = diag(phase_shift_complex_vector_Naka(1:L));
  
         ch_h_Naka_SB(ss) =  OnOff*h_Naka_SB(ss) + h_Naka_SR(ss,:)*phase_shift_matrix_RIS_Naka*h_Naka_RB(ss,:).';
+       % Phase-shift + cascaded channel generation at Willie
+        ch_h_Naka_SW(ss)   =  OnOff*h_Naka_SW(ss) + h_Naka_SR(ss,:)*phase_shift_matrix_RIS_Naka*h_Naka_RW(ss,:).';
 
     %% Rician
     % Phase-shift + cascaded channel generation at Willie
@@ -88,11 +88,14 @@ for ss=1:sample
 
     % Phase-shift + cascaded channel generation at Bob
         for ll=1:L
-            phase_shift_config =  angle(h_Rician_SB(ss)) - angle(h_Rician_SR(ss,ll))   -angle(h_Rician_RB(ss,ll));
-            phase_shift_complex_vector(ll) = exp(1i*phase_shift_config);
+            phase_shift_config_Rician =  angle(h_Rician_SB(ss)) - angle(h_Rician_SR(ss,ll))   - angle(h_Rician_RB(ss,ll)).';
+            phase_shift_complex_vector_Rician(ll) = exp(1i*phase_shift_config_Rician);
         end
-        phase_shift_matrix_RIS = diag(phase_shift_complex_vector(1:L));
-        ch_h_Rician_SB(ss) =  OnOff*h_Rician_SB(ss) + h_Rician_SR(ss,:)*phase_shift_matrix_RIS*h_Rician_RB(ss,:).';
+        phase_shift_matrix_RIS_Rician = diag(phase_shift_complex_vector_Rician(1:L));
+        ch_h_Rician_SB(ss) =  OnOff*h_Rician_SB(ss) + h_Rician_SR(ss,:)*phase_shift_matrix_RIS_Rician*h_Rician_RB(ss,:).';
+
+        % Phase-shift + casecaded channel generation at Willie
+        ch_h_Rician_SW(ss) =  OnOff*h_Rician_SW(ss) + h_Rician_SR(ss,:)*phase_shift_matrix_RIS_Rician*h_Rician_RW(ss,:).';
 
 end
 
